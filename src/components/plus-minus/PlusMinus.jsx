@@ -1,0 +1,25 @@
+import { useState } from "react";
+import style from "./PlusMinus.module.css";
+
+export function PlusMinus() {
+  const [count, setCount] = useState(0);
+
+  function handleMinusClick() {
+    setCount(count - 1);
+  }
+  function handlePlusClick() {
+    setCount(count + 1);
+  }
+
+  return (
+    <div className={style.plusMinus}>
+      <button onClick={handleMinusClick} className={style.btn}>
+        -
+      </button>
+      <span className={style.count}>{count}</span>
+      <button onClick={handlePlusClick} className={style.btn}>
+        +
+      </button>
+    </div>
+  );
+}
