@@ -1,11 +1,38 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import style from "./Todo.module.css";
 import { randomNumber } from "../../lib/randomNumber";
+import { TodoItem } from "./TodoItem";
 
 export function Todo() {
-  const [todoList, setTodoList] = useState([]);
+  const storageKey = "54gr_todo";
+
+  const [todoList, setTodoList] = useState(null);
   const [text, setText] = useState("");
   const inputRef = useRef();
+
+  // komponentui uzsikrovus
+  useEffect(() => {
+    try {
+      const data = JSON.parse(localStorage.getItem(storageKey));
+      if (data) {
+        setTodoList(() => data);
+      } else {
+        setTodoList(() => []);
+      }
+    } catch (error) {
+      console.log(error);
+      setTodoList(() => []);
+    }
+  }, []);
+
+  // keiciantis konkreciam state
+  useEffect(() => {
+    if (todoList === null) {
+      return;
+    }
+
+    localStorage.setItem(storageKey, JSON.stringify(todoList));
+  }, [todoList]);
 
   function handleInputChange(e) {
     setText(e.target.value);
@@ -16,6 +43,7 @@ export function Todo() {
     if (!text) {
       return;
     }
+    console.log(todoList);
 
     setTodoList((list) => [{ id: randomNumber(1, 1e6), text }, ...list]);
     setText(() => "");
@@ -26,7 +54,10 @@ export function Todo() {
     setTodoList((list) => list.filter((item) => item.id !== id));
   }
 
-  // reikia <li> iskelti i atskira faila/komponenta
+  function handleTextUpdate(id, newText) {
+    setTodoList(() => todoList.map((todo) => (todo.id === id ? { ...todo, text: newText } : todo)));
+  }
+
   return (
     <div className={style.todo}>
       <form onSubmit={handleFormSubmit} className={style.form}>
@@ -36,16 +67,15 @@ export function Todo() {
         </button>
       </form>
       <ul className={style.ul}>
-        {todoList.map((todo) => (
-          <li key={todo.id} className={style.li}>
-            <p className={style.p}>{todo.text}</p>
-            <div className={style.actions}>
-              <button onClick={() => handleDeleteClick(todo.id)} className={style.btn}>
-                Delete
-              </button>
-            </div>
-          </li>
-        ))}
+        {todoList &&
+          todoList.map((todo) => (
+            <TodoItem
+              key={todo.id}
+              data={todo}
+              handleDeleteClick={handleDeleteClick}
+              handleTextUpdate={handleTextUpdate}
+            />
+          ))}
       </ul>
     </div>
   );
