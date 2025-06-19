@@ -1,12 +1,4 @@
-export function GardenList({ removeItem, list }) {
-  function handleRemove(e) {
-    e.preventDefault();
-    removeItem();
-    list.pop();
-
-    console.log(e);
-    console.log(list);
-  }
+export function GardenList({ removeFunc, list }) {
   return (
     <ol className="list-group list-group-numbered" style={{ marginTop: "2rem" }}>
       {list.map((item) => (
@@ -15,7 +7,11 @@ export function GardenList({ removeItem, list }) {
             <div className="fw-bold">{item.name}</div>
           </div>
           <span className="badge text-bg-primary rounded-pill">{item.amount}</span>
-          <button onClick={handleRemove} className="badge text-bg-danger rounded-pill" style={{ border: "none" }}>
+          <button
+            onClick={() => removeFunc(item.name)}
+            className="badge text-bg-danger rounded-pill"
+            style={{ border: "none" }}
+          >
             Remove
           </button>
         </li>

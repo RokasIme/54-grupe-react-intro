@@ -28,7 +28,7 @@ export function GardenForm({ addNewItem }) {
           className="form-control"
           placeholder="Garden item"
         />
-        <label for="item">Garden item</label>
+        <label htmlFor="item">Garden item</label>
       </div>
       <div className="form-floating">
         <input
@@ -39,7 +39,7 @@ export function GardenForm({ addNewItem }) {
           className="form-control"
           placeholder="0"
         />
-        <label for="amount">Amount</label>
+        <label htmlFor="amount">Amount</label>
       </div>
       <button className="btn btn-primary w-100 py-2" type="submit">
         Add to list
